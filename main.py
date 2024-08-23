@@ -25,7 +25,7 @@ def fetch_news():
         news_list = response.json().get("articles")
         return [summarize_news(article) for article in news_list]
     else:
-        st.error("Không thể lấy dữ liệu từ API")
+        st.error("Error can not fetch data")
         return []
 
 
@@ -47,48 +47,47 @@ def read_file_with_encoding_detection(uploaded_file):
             return uploaded_file.read().decode(encoding)
         except UnicodeDecodeError:
             continue
-    st.error(
-        "Không thể đọc tệp này. Tệp có thể được mã hóa bằng định dạng không được hỗ trợ.")
+    st.error("Error can not read this file")
     return None
 
 
 def main():
     st.title("Text Summarization Web App")
 
-    st.sidebar.header("Chọn chế độ đầu vào")
+    st.sidebar.header("Select input option")
     input_type = st.sidebar.selectbox(
-        "Chọn chế độ:", ("Upload file", "Nhập văn bản trực tiếp", "Xem tin tức"))
+        "Select option:", ("Upload file", "Text input", "News"))
 
     # option upload file
     if input_type == "Upload file":
         uploaded_file = st.file_uploader(
-            "Tải lên tệp văn bản", type=["txt", "pdf", "docx"])
+            "Upload text file", type=["txt", "pdf", "docx"])
         file_text = None
 
         if uploaded_file is not None:
             try:
                 file_text = read_file_with_encoding_detection(uploaded_file)
-                st.write("Văn bản từ tệp đã tải lên:")
+                st.write("Text from upload file:")
                 st.write(file_text)
             except UnicodeDecodeError:
-                st.error("Không thể đọc tệp. Mã hóa không được hỗ trợ.")
+                st.error("Error can not read the text file")
 
         if file_text:
-            if st.button("Tóm tắt"):
+            if st.button("Summarize"):
                 summarized_text = summarize_text(file_text)
-                st.write("Bản tóm tắt:")
+                st.write("Summarize text:")
                 st.write(summarized_text)
 
     # option text
-    elif input_type == "Nhập văn bản trực tiếp":
-        user_input = st.text_area("Nhập văn bản cần tóm tắt", height=250)
-        if st.button("Tóm tắt"):
+    elif input_type == "Text input":
+        user_input = st.text_area("Input text to summarize", height=250)
+        if st.button("Summarize"):
             summarized_text = summarize_text(user_input)
-            st.write("Bản tóm tắt:")
+            st.write("Summarize text:")
             st.write(summarized_text)
 
     # option news
-    elif input_type == "Xem tin tức":
+    elif input_type == "News":
         news_articles = fetch_news()
         if news_articles:
             for article in news_articles:
@@ -103,7 +102,7 @@ def main():
                     st.markdown(f"[Read more]({article['url']})")
                     st.write("---")
                 else:
-                    st.write("Hình ảnh không khả dụng")
+                    st.write("Image is invalid")
                     st.subheader(article['title'])
                     st.write(f"Published at: {article['publishedAt']}")
                     st.markdown(f"[Read more]({article['url']})")
