@@ -8,5 +8,5 @@ def function_text_input():
 
     if st.button("Summarize"):
         summarized_text = summarize_text(user_input)
-        st.write("Summarize text:")
+        st.write("Summary:")
         st.write(summarized_text)

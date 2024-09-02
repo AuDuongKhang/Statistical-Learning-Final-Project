@@ -2,6 +2,7 @@ import requests
 import streamlit as st
 from PIL import Image
 from io import BytesIO
+from summarize_text import summarize_text
 
 
 # summarize the news
@@ -9,7 +10,7 @@ def summarize_news(news_data):
     return {
         "urlToImage": news_data.get("urlToImage"),
         "title": news_data.get("title"),
-        "description": news_data.get("description"),
+        "description": summarize_text(news_data.get("description")),
         "publishedAt": news_data.get("publishedAt"),
         "url": news_data.get("url"),
     }
